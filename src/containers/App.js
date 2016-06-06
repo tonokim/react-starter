@@ -1,5 +1,7 @@
 import React, { Component,PropTypes } from 'react';
-
+import { bindActionCreators } from 'redux';
+import * as Actions from '../actions/index';
+import { connect } from 'react-redux';
 
 class App extends Component{
   constructor(props,context) {
@@ -7,6 +9,7 @@ class App extends Component{
 	}
 
   render(){
+    const { children } = this.props;
     return(
       <div>
         {React.cloneElement(children, {key: location.key})}
