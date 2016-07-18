@@ -6,6 +6,27 @@ var autoprefixer = require('autoprefixer');
 var precss       = require('precss');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
+var babelQuery = {
+    presets: ['es2015', 'react', 'stage-0'],
+    "env": {
+      "development": {
+        "plugins": [
+          ["react-transform", {
+            "transforms": [{
+              "transform": "react-transform-hmr",
+              "imports": ["react"],
+              "locals": ["module"]
+            }, {
+              "transform": "react-transform-catch-errors",
+              "imports": ["react", "redbox-react"]
+            }]
+          }]
+        ]
+      }
+    },
+    cacheDirectory: true
+};
+
 module.exports = {
   // devtool: 'source-map',
 	entry: [
@@ -15,7 +36,7 @@ module.exports = {
 		path: path.join(__dirname, 'static'),
 		filename: '[chunkhash:8].bundle.js',
 		// publicPath: '/static/',
-    publicPath: '/'
+    publicPath: './'
 	},
 	plugins: [
 		new webpack.optimize.OccurenceOrderPlugin(),
@@ -73,7 +94,9 @@ module.exports = {
 		loaders: [{
 			test: /\.js$/,
 			loaders: ['babel'],
-			include: path.join(__dirname, 'src')
+			// exclude: /node_modules/,
+			include: path.join(__dirname, 'src'),
+			query: babelQuery
 		},{
 			test: /\.css$/,
 			loader: ExtractTextPlugin.extract('style','css!postcss?pack=defaults')
