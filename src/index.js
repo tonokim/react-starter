@@ -1,10 +1,10 @@
-import './scss/main.scss';
+// import './scss/main.scss';
 
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router,browserHistory } from 'react-router';
-import injectTapEventPlugin from "react-tap-event-plugin";
+import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 import { RouterConfig } from './routes';

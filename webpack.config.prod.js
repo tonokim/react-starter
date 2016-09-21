@@ -1,42 +1,54 @@
 var path = require('path');
 var webpack = require('webpack');
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var autoprefixer = require('autoprefixer');
 var precss       = require('precss');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-var babelQuery = {
-    presets: ['es2015', 'react', 'stage-0'],
-    "env": {
-      "development": {
-        "plugins": [
-          ["react-transform", {
-            "transforms": [{
-              "transform": "react-transform-hmr",
-              "imports": ["react"],
-              "locals": ["module"]
-            }, {
-              "transform": "react-transform-catch-errors",
-              "imports": ["react", "redbox-react"]
-            }]
-          }]
-        ]
-      }
-    },
-    cacheDirectory: true
-};
+// var babelQuery = {
+//     presets: ['es2015', 'react', 'stage-0'],
+//     'env': {
+//       'development': {
+//         'plugins': [
+//           ['react-transform', {
+//             'transforms': [{
+//               'transform': 'react-transform-hmr',
+//               'imports': ['react'],
+//               'locals': ['module']
+//             }, {
+//               'transform': 'react-transform-catch-errors',
+//               'imports': ['react', 'redbox-react']
+//             }]
+//           }]
+//         ]
+//       }
+//     },
+//     cacheDirectory: true
+// };
 
 module.exports = {
   // devtool: 'source-map',
-	entry: [
-		'./src/index'
-	],
+  entry: {
+    bundle: [
+  		'webpack-hot-middleware/client?noInfo=true&reload=true',
+  		'./src/index'
+  	],
+    vendor: [
+      'react',
+      'react-dom',
+      'redux',
+      'react-redux',
+      'react-router',
+      'redbox-react',
+      'webpack-hot-middleware/client?noInfo=true&reload=true',
+    ],
+  },
 	output: {
 		path: path.join(__dirname, 'static'),
-		filename: '[chunkhash:8].bundle.js',
+		filename: '[chunkhash:8].[name].js',
 		// publicPath: '/static/',
-    publicPath: './'
+    publicPath: '/'
 	},
 	plugins: [
 		new webpack.optimize.OccurenceOrderPlugin(),
@@ -50,7 +62,7 @@ module.exports = {
     //     warnings: false
     //   }
     // }),
-    // new webpack.optimize.CommonsChunkPlugin('common','/common.js'),
+    new webpack.optimize.CommonsChunkPlugin('vendor', '[chunkhash:8].vendor.js'),
     new webpack.optimize.DedupePlugin(),  //查找相等或近似的模块，避免在最终生成的文件中出现重复的模块。
 		new webpack.optimize.UglifyJsPlugin({
 			compressor: {
@@ -62,7 +74,7 @@ module.exports = {
   	// 		minSizeReduce: 1.5,
   	// 		moveToParents: true
   	// }),
-		new ExtractTextPlugin("[chunkhash:8].[name].css"),
+		new ExtractTextPlugin('[chunkhash:8].[name].css'),
 		new CopyWebpackPlugin([
       {
         from: './src/imgs/',
@@ -93,10 +105,9 @@ module.exports = {
 	module: {
 		loaders: [{
 			test: /\.js$/,
-			loader: 'babel',
+			loader: 'babel?cacheDirectory',
 			// exclude: /node_modules/,
 			include: path.join(__dirname, 'src'),
-			query: babelQuery
 		},{
 			test: /\.css$/,
 			loader: ExtractTextPlugin.extract('style','css!postcss?pack=defaults')
@@ -108,22 +119,22 @@ module.exports = {
 			loader: 'url?limit=8192'
 		},{
 			test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-			loader: "url?limit=10000&mimetype=application/font-woff"
+			loader: 'url?limit=10000&mimetype=application/font-woff'
 		}, {
 			test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-			loader: "url?limit=10000&mimetype=application/font-woff2"
+			loader: 'url?limit=10000&mimetype=application/font-woff2'
 		}, {
 			test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-			loader: "url?limit=10000&mimetype=application/octet-stream"
+			loader: 'url?limit=10000&mimetype=application/octet-stream'
 		}, {
 			test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-			loader: "file"
+			loader: 'file'
 		}, {
 			test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-			loader: "url?limit=10000&mimetype=image/svg+xml"
+			loader: 'url?limit=10000&mimetype=image/svg+xml'
 		}]
 	},
-  postcss:function(){
+  postcss:() => {
     return{
       defaults: [autoprefixer({ browsers: ['last 5 versions'] })],
       other: [precss,autoprefixer({ browsers: ['last 5 versions'] })]
