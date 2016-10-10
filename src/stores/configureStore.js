@@ -1,7 +1,7 @@
 import { createStore,compose,applyMiddleware } from 'redux';
 import rootReducer from '../reducers';
-import Localstorage from "./localstorage";
-const { read,write } = Localstorage("react-starter");
+import localStorage from './localstorage';
+const { read,write } = localStorage('react-starter');
 
 
 export default function configureStore(initialState){

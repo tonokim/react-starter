@@ -6,32 +6,10 @@ var autoprefixer = require('autoprefixer');
 var precss       = require('precss');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-// var babelQuery = {
-//     presets: ['es2015', 'react', 'stage-0'],
-//     'env': {
-//       'development': {
-//         'plugins': [
-//           ['react-transform', {
-//             'transforms': [{
-//               'transform': 'react-transform-hmr',
-//               'imports': ['react'],
-//               'locals': ['module']
-//             }, {
-//               'transform': 'react-transform-catch-errors',
-//               'imports': ['react', 'redbox-react']
-//             }]
-//           }]
-//         ]
-//       }
-//     },
-//     cacheDirectory: true
-// };
-
 module.exports = {
   // devtool: 'source-map',
   entry: {
     bundle: [
-  		'webpack-hot-middleware/client?noInfo=true&reload=true',
   		'./src/index'
   	],
     vendor: [
@@ -41,7 +19,6 @@ module.exports = {
       'react-redux',
       'react-router',
       'redbox-react',
-      'webpack-hot-middleware/client?noInfo=true&reload=true',
     ],
   },
 	output: {
