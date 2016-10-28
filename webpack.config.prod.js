@@ -28,49 +28,42 @@ module.exports = {
     publicPath: '/'
 	},
 	plugins: [
-		new webpack.optimize.OccurenceOrderPlugin(),
 		new webpack.DefinePlugin({
 			'process.env': {
 				'NODE_ENV': JSON.stringify('production')
 			}
 		}),
-    // new webpack.optimize.MinChunkSizePlugin({
-    //   compress: {
-    //     warnings: false
-    //   }
-    // }),
-    new webpack.optimize.CommonsChunkPlugin('vendor', '[chunkhash:8].vendor.js'),
+    new webpack.optimize.OccurenceOrderPlugin(),//按引用频度来排序 ID，以便达到减少文件大小的效果
     new webpack.optimize.DedupePlugin(),  //查找相等或近似的模块，避免在最终生成的文件中出现重复的模块。
-		new webpack.optimize.UglifyJsPlugin({
-			compressor: {
-				warnings: false,
-			},
-		}),
-    new webpack.optimize.OccurenceOrderPlugin(),  //按引用频度来排序 ID，以便达到减少文件大小的效果
-    // new webpack.optimize.AggressiveMergingPlugin({
-  	// 		minSizeReduce: 1.5,
-  	// 		moveToParents: true
-  	// }),
+    new webpack.optimize.UglifyJsPlugin({
+      compressor: {
+        screw_ie8: true, // React doesn't support IE8
+        warnings: false,
+      },
+      mangle: {
+        screw_ie8: true
+      },
+      output: {
+        comments: false,
+        screw_ie8: true
+      }
+    }),
+    new webpack.optimize.CommonsChunkPlugin('vendor', '[chunkhash:8].vendor.js'),
 		new ExtractTextPlugin('[chunkhash:8].[name].css'),
 		new CopyWebpackPlugin([
       {
         from: './src/imgs/',
-        to: 'imgs/'
-      },{
-        from: './src/css/',
-        to: 'css/'
-      },{
-        from: './src/fonts/',
-        to: 'fonts/'
-      },
+        to: 'imgs/',
+        ignore:['.DS_Store']
+      }
       // ,{
-      // 	from: './src/api/',
-      // 	to: 'api/'
-      // }
-      // ,{
-      // 	from: './index.static.html',
-      // 	to: 'index.html',
-      // 	toType: 'file'
+      //   from: './src/css/',
+      //   to: 'css/',
+      //   ignore:['.DS_Store']
+      // },{
+      //   from: './src/fonts/',
+      //   to: 'fonts/',
+      //   ignore:['.DS_Store']
       // }
     ]),
     new HtmlWebpackPlugin({
@@ -83,33 +76,12 @@ module.exports = {
 		loaders: [{
 			test: /\.js$/,
 			loader: 'babel?cacheDirectory',
-			// exclude: /node_modules/,
 			include: path.join(__dirname, 'src'),
-		},{
-			test: /\.css$/,
-			loader: ExtractTextPlugin.extract('style','css!postcss?pack=defaults')
-		},{
-			test: /\.scss$/,
-			loader: ExtractTextPlugin.extract('style','css!postcss?pack=defaults!sass')
-		},{
-			test: /\.(png|jpg)$/,
-			loader: 'url?limit=8192'
-		},{
-			test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-			loader: 'url?limit=10000&mimetype=application/font-woff'
-		}, {
-			test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-			loader: 'url?limit=10000&mimetype=application/font-woff2'
-		}, {
-			test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-			loader: 'url?limit=10000&mimetype=application/octet-stream'
-		}, {
-			test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-			loader: 'file'
-		}, {
-			test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-			loader: 'url?limit=10000&mimetype=image/svg+xml'
-		}]
+		},
+    { test: /\.css$/, loader: 'style!css!postcss?pack=defaults' },
+    { test: /\.scss$/, loader: 'style!css!postcss?pack=defaults!sass' },
+    { test: /\.(png|jpg|jpeg|gif)$/, loader: 'url?limit=10000&name=./images/[name].[ext]' },
+    { test: /\.(ttf|eot|woff|woff2|otf|svg)/, loader: 'file?name=./font/[name].[ext]' }]
 	},
   postcss:() => {
     return{
@@ -118,7 +90,7 @@ module.exports = {
     };
   },
 	resolve: {
-		alias: {
-		}
-	}
+		alias: {}
+	},
+  noParse:[]
 };

@@ -41,33 +41,12 @@ module.exports = {
 		loaders: [{
 			test: /\.js$/,
 			loader: 'babel?cacheDirectory',
-      // exclude: /node_modules/,
-			include: path.join(__dirname, 'src'),
-		},{
-			test: /\.css$/,
-			loader: 'style!css!postcss?pack=defaults'
-		},{
-			test: /\.scss$/,
-			loader: 'style!css!postcss?pack=defaults!sass'
-		},{
-			test: /\.(png|jpg)$/,
-			loader: 'url?limit=8192'
-		},{
-			test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-			loader: 'url?limit=10000&mimetype=application/font-woff'
-		}, {
-			test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-			loader: 'url?limit=10000&mimetype=application/font-woff2'
-		}, {
-			test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-			loader: 'url?limit=10000&mimetype=application/octet-stream'
-		}, {
-			test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-			loader: 'file'
-		}, {
-			test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-			loader: 'url?limit=10000&mimetype=image/svg+xml'
-		}]
+			include: path.join(__dirname, 'src')
+		},
+    { test: /\.css$/, loader: 'style!css!postcss?pack=defaults' },
+    { test: /\.scss$/, loader: 'style!css!postcss?pack=defaults!sass' },
+    { test: /\.(png|jpg|jpeg|gif)$/, loader: 'url?limit=10000&name=./images/[name].[ext]' },
+    { test: /\.(ttf|eot|woff|woff2|otf|svg)/, loader: 'file?name=./font/[name].[ext]' }]
 	},
   postcss:() => {
     return{
